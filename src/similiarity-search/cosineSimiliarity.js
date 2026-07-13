@@ -9,6 +9,7 @@ const cosineSimiliarity = (vectorA, vectorB) => {
   const product = dotProduct(vectorA, vectorB);
 
   const denominator = magnitude(vectorA) * magnitude(vectorB);
+  
   if (denominator === 0)
     throw new Error("Cosine similarity is undefined for zero vectors.");
 

@@ -1,4 +1,4 @@
-import cosineSimiliarity from "../similiarity-search/cosineSimiliarity";
+import cosineSimiliarity from "../similiarity-search/cosineSimiliarity.js";
 
 class InMemoryVectorStore {
   #storage;
@@ -32,11 +32,6 @@ class InMemoryVectorStore {
     this.#storage.push(...vectors);
   }
 
-  clear() {
-    this.#storage = [];
-    this.#ids = new Set();
-  }
-
   #createSearchResult(embedding, chunk) {
     const similarity = cosineSimiliarity(embedding, chunk.embedding);
 
@@ -50,6 +45,11 @@ class InMemoryVectorStore {
       .map((chunk) => this.#createSearchResult(embedding, chunk))
       .sort((a, b) => b.similarity - a.similarity)
       .slice(0, topK);
+  }
+
+  clear() {
+    this.#storage = [];
+    this.#ids = new Set();
   }
 }
 
