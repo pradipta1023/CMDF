@@ -1,4 +1,4 @@
-import OllamaEmbeddingService from "../src/OllamaEmbeddingService.js";
+import OllamaEmbeddingService from "../src/EmbeddingService/OllamaEmbeddingService.js";
 import { jest } from "@jest/globals";
 
 describe("OllamaEmbeddingService", () => {
