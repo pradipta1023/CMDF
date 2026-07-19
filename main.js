@@ -2,29 +2,44 @@ import InMemoryVectorStore from "./src/vector-store/InMemoryVectorStore.js"
 import chunker from "./src/chunker.js";
 import OllamaEmbeddingService from "./src/EmbeddingService/OllamaEmbeddingService.js";
 import EmbeddingPipeline from "./src/EmbeddingPipeline.js";
+import OllamaChatService from "./src/ChatService/OllamaChatService.js"
+import Retriever from "./src/Retriever/Retriever.js"
+import PromptBuilder from "./src/PromptBuilder/PromptBuilder.js"
+import RagApplication from "./src/RagApplication/RagApplication.js"
+import CLI from "./frontend/CLI/cli.js"
 
 const main = async () => {
-  const text = "React is a javascript library. React consists of hooks like useState, useEffect, useRef. The cat is eating fish.";
-  const options = { chunkSize: 5, overlap: 2 };
-
-  const chunks = chunker(text, options);
   const embeddingService = new OllamaEmbeddingService({
     baseUrl: "http://localhost:11434",
     model: "nomic-embed-text",
   })
-  const vectorStore = new InMemoryVectorStore();
+  const chatService = new OllamaChatService({
+    baseUrl: "http://localhost:11434",
+    model: "qwen3:14b"
+  })
+  const vectorStore = new InMemoryVectorStore([]);
+  const embeddingPipeline = new EmbeddingPipeline({ embeddingService });
+  const retriever = new Retriever({ embeddingService, vectorStore })
+  const promptBuilder = new PromptBuilder();
 
+  const ragApplication = new RagApplication({
+    chunker,
+    embeddingPipeline,
+    vectorStore,
+    retriever,
+    promptBuilder,
+    chatService,
+    chunkOptions: {
+      chunkSize: 10,
+      overlap: 5,
+    }
+  });
 
-  const pipeline = new EmbeddingPipeline({ embeddingService });
+  const cli = new CLI({
+    ragApplication,
+  });
 
-  const result = await pipeline.embed(chunks)
-
-  vectorStore.add(result);
-
-  const question = "What is React?";
-  const questionEmbedding = await embeddingService.embed(question);
-  const context = vectorStore.search({ embedding: questionEmbedding, topK: 3 });
-
+  await cli.start();
 }
 
 main();

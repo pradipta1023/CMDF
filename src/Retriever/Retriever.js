@@ -13,6 +13,7 @@ class Retriever {
       throw new Error("Question must be provided for getting answer");
 
     const queryEmbedding = await this.#embeddingService.embed(question);
+
     return this.#vectorStore.search({ queryEmbedding, topK });
   }
 }

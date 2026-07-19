@@ -39,7 +39,11 @@ describe("RagApplication", () => {
       vectorStore,
       retriever,
       promptBuilder,
-      chatService
+      chatService,
+      chunkOptions: {
+        chunkSize: 5,
+        overlap: 2
+      }
     });
   });
 
@@ -53,19 +57,6 @@ describe("RagApplication", () => {
     expect(chunker).toHaveBeenCalledWith(
       "React is awesome.",
       { chunkSize: 5, overlap: 2 }
-    );
-  });
-
-  test("should use custom chunk options", async () => {
-    chunker.mockReturnValue([]);
-
-    embeddingPipeline.embed.mockResolvedValue([]);
-
-    await rag.add("React", { chunkSize: 10, overlap: 3 });
-
-    expect(chunker).toHaveBeenCalledWith(
-      "React",
-      { chunkSize: 10, overlap: 3 }
     );
   });
 

@@ -38,7 +38,7 @@ class InMemoryVectorStore {
     return { id: chunk.id, text: chunk.text, similarity };
   }
 
-  search({ embedding: queryEmbedding, topK = 5 }) {
+  search({ queryEmbedding, topK = 5 }) {
     if (!queryEmbedding) throw new Error("Embedding must be provided for searching");
 
     return this.#storage

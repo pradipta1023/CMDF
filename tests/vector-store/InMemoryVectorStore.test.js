@@ -126,7 +126,7 @@ describe("InMemoryVectorStore - search", () => {
   test("should return an empty array when the store is empty", () => {
     expect(
       store.search({
-        embedding: [1, 2]
+        queryEmbedding: [1, 2]
       })
     ).toEqual([]);
   });
@@ -137,7 +137,7 @@ describe("InMemoryVectorStore - search", () => {
       { id: 2, text: "Angular", embedding: [2, 4] }
     ]);
 
-    const results = store.search({ embedding: [1, 2] });
+    const results = store.search({ queryEmbedding: [1, 2] });
 
     expect(results[0].id).toBe(1);
   });
@@ -148,7 +148,7 @@ describe("InMemoryVectorStore - search", () => {
       { id: 2, text: "B", embedding: [0, 1] }
     ]);
 
-    const results = store.search({ embedding: [1, 0] });
+    const results = store.search({ queryEmbedding: [1, 0] });
 
     expect(results[0].similarity)
       .toBeGreaterThanOrEqual(results[1].similarity);
@@ -161,7 +161,7 @@ describe("InMemoryVectorStore - search", () => {
       { id: 3, text: "C", embedding: [1, 1] }
     ]);
 
-    const results = store.search({ embedding: [1, 0], topK: 2 });
+    const results = store.search({ queryEmbedding: [1, 0], topK: 2 });
 
     expect(results).toHaveLength(2);
   });
@@ -172,7 +172,7 @@ describe("InMemoryVectorStore - search", () => {
       { id: 2, text: "B", embedding: [0, 1] }
     ]);
 
-    const results = store.search({ embedding: [1, 0], topK: 10 });
+    const results = store.search({ queryEmbedding: [1, 0], topK: 10 });
 
     expect(results).toHaveLength(2);
   });
@@ -183,7 +183,7 @@ describe("InMemoryVectorStore - search", () => {
       { id: 2, text: "B", embedding: [0, 1] }
     ]);
 
-    const results = store.search({ embedding: [1, 0] });
+    const results = store.search({ queryEmbedding: [1, 0] });
 
     expect(results).toHaveLength(2);
   });
@@ -191,7 +191,7 @@ describe("InMemoryVectorStore - search", () => {
   test("should return only id, text and similarity", () => {
     store.add([{ id: 1, text: "React", embedding: [1, 2] }]);
 
-    const result = store.search({ embedding: [1, 2] })[0];
+    const result = store.search({ queryEmbedding: [1, 2] })[0];
 
     expect(result).toEqual({ id: 1, text: "React", similarity: expect.any(Number) });
 
@@ -203,7 +203,7 @@ describe("InMemoryVectorStore - search", () => {
 
     store.add([vector]);
 
-    store.search({ embedding: [1, 2] });
+    store.search({ queryEmbedding: [1, 2] });
 
     expect(vector).toEqual({ id: 1, text: "React", embedding: [1, 2] });
   });
