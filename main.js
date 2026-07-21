@@ -9,14 +9,8 @@ import RagApplication from "./src/RagApplication/RagApplication.js"
 import CLI from "./frontend/CLI/cli.js"
 
 const main = async () => {
-  const embeddingService = new OllamaEmbeddingService({
-    baseUrl: "http://localhost:11434",
-    model: "nomic-embed-text",
-  })
-  const chatService = new OllamaChatService({
-    baseUrl: "http://localhost:11434",
-    model: "qwen3:14b"
-  })
+  const embeddingService = new OllamaEmbeddingService({ baseUrl: "http://localhost:11434", model: "nomic-embed-text", })
+  const chatService = new OllamaChatService({ baseUrl: "http://localhost:11434", model: "qwen3:14b" })
   const vectorStore = new InMemoryVectorStore([]);
   const embeddingPipeline = new EmbeddingPipeline({ embeddingService });
   const retriever = new Retriever({ embeddingService, vectorStore })
@@ -35,9 +29,7 @@ const main = async () => {
     }
   });
 
-  const cli = new CLI({
-    ragApplication,
-  });
+  const cli = new CLI({ ragApplication });
 
   await cli.start();
 }

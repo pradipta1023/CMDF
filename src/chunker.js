@@ -1,10 +1,11 @@
+import { v4 as uuidv4 } from 'uuid';
+
 const createChunks = (words, { chunkSize, overlap }) => {
   const chunks = [];
-  let chunkId = 1;
 
   for (let i = 0; i < words.length; i += chunkSize - overlap) {
     const chunkWords = words.slice(i, i + chunkSize);
-    chunks.push({ text: chunkWords.join(' '), id: chunkId++ });
+    chunks.push({ text: chunkWords.join(' '), id: uuidv4() });
 
     if (i + chunkSize >= words.length) break;
   }
