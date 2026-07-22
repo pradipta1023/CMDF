@@ -1,3 +1,5 @@
+import { ChromaClient } from "chromadb";
+import ChromaVectorStore from "./src/vector-store/chormaVectorStore.js";
 import InMemoryVectorStore from "./src/vector-store/InMemoryVectorStore.js"
 import chunker from "./src/chunker.js";
 import OllamaEmbeddingService from "./src/EmbeddingService/OllamaEmbeddingService.js";
@@ -9,9 +11,18 @@ import RagApplication from "./src/RagApplication/RagApplication.js"
 import CLI from "./frontend/CLI/cli.js"
 
 const main = async () => {
-  const embeddingService = new OllamaEmbeddingService({ baseUrl: "http://localhost:11434", model: "nomic-embed-text", })
-  const chatService = new OllamaChatService({ baseUrl: "http://localhost:11434", model: "qwen3:14b" })
-  const vectorStore = new InMemoryVectorStore([]);
+  const embeddingService = new OllamaEmbeddingService({ baseUrl: "http://localhost:11435", model: "nomic-embed-text", })
+  const chatService = new OllamaChatService({ baseUrl: "http://localhost:11435", model: "qwen3:14b" })
+
+  const client = new ChromaClient({
+    host: "localhost",
+    port: 8000,
+    ssl: false
+  })
+  const collection = await client.getOrCreateCollection({ name: "test", embeddingFunction: null })
+
+  const vectorStore = new ChromaVectorStore({ collection });
+
   const embeddingPipeline = new EmbeddingPipeline({ embeddingService });
   const retriever = new Retriever({ embeddingService, vectorStore })
   const promptBuilder = new PromptBuilder();

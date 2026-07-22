@@ -24,8 +24,11 @@ class OllamaChatService {
         })
       });
 
-      if (!response.ok)
+      if (!response.ok) {
+        console.log(response);
+
         throw new Error(`Ollama server returned status ${response.status}`);
+      }
 
       const data = await response.json();
       return data.message.content;
